@@ -4,7 +4,6 @@ import android.widget.ImageView
 import android.widget.RatingBar
 import androidx.databinding.BindingAdapter
 import com.bumptech.glide.Glide
-import com.example.movieapp.BuildConfig
 
 
 object DataBinderUtils {
@@ -13,7 +12,7 @@ object DataBinderUtils {
     fun imageApplyString(imageView: ImageView, url: String?) {
         Glide.with(imageView.context)
             .asDrawable()
-            .load("${BuildConfig.BASE_URL}${url}")
+            .load("https://image.tmdb.org/t/p/w500${url}")
             .into(imageView)
     }
 
