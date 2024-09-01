@@ -6,7 +6,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.movieapp.adapter.AllMoviesAdapter
@@ -110,17 +109,14 @@ class MoviesListFragment : Fragment(), AllMoviesAdapter.IMoviesListener {
     }
 
     private fun getAllMoviesFromLocalDatabase() {
-        viewModels.allMovies.observe(viewLifecycleOwner, Observer {
-            if (!it.isNullOrEmpty()){
-                id= it[it.size-1].id!!
-            }
+        moviesId.clear()
+        viewModels.allMovies.observe(viewLifecycleOwner) {
             it.forEach {
-                val movieId=MovieId(it.movieId)
-                id= it.id!!
+                val movieId = MovieId(it.movieId)
+                id = it.id!!
                 moviesId.add(movieId)
             }
-
-        })
+        }
     }
 
     override fun onPause() {

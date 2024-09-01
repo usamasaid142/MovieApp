@@ -2,7 +2,6 @@ package com.example.movieapp.adapter
 
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
@@ -39,8 +38,10 @@ class AllMoviesAdapter (val listener:IMoviesListener,val moviesList:List<MovieId
 
         moviesList.forEach {
             if (result.id==it.id){
-                holder.binding.ivFav.visibility=View.VISIBLE
-                holder.binding.fab.visibility=View.GONE
+                holder.binding.isClicked=true
+               return
+            }else{
+                holder.binding.isClicked=false
             }
         }
     }
