@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-   >
-
+    tools:context=".ui.MovieDetailsFragment">
     <data>
 
         <variable
@@ -13,9 +14,8 @@
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/layoutCard"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:padding="3dp">
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -121,9 +121,50 @@
                 android:text="@{data.release_date}"
                 android:textColor="@color/black"
                 android:textSize="12sp"
-                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/ratingBar" />
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tv_Overview"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"
+                android:gravity="start"
+                android:padding="2dp"
+                android:text="@{data.overview}"
+                android:textColor="@color/black"
+                android:textSize="12sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tv_ReleaseDate" />
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tv_vote_average"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:layout_marginTop="5dp"
+                android:gravity="start"
+                android:padding="2dp"
+                android:text="@{String.valueOf(data.vote_average)}"
+                android:textColor="@color/black"
+                android:textSize="12sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tv_Overview" />
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tv_Originallanguage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"
+                android:gravity="start"
+                android:padding="2dp"
+                android:text="@{data.original_language}"
+                android:textColor="@color/black"
+                android:textSize="12sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tv_vote_average" />
 
             <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/fab"

@@ -6,28 +6,29 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.movieapp.adapter.AllMoviesAdapter
 import com.example.movieapp.databinding.MovieslistfragmentBinding
+import com.example.movieapp.model.Result
 import com.example.movieapp.utils.Resource
 import com.example.movieapp.viewmodels.MoviesViewModel
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class MoviesListFragment : Fragment() {
+class MoviesListFragment : Fragment(),AllMoviesAdapter.IMoviesListener {
 
   private lateinit var binding:MovieslistfragmentBinding
     private val productViewModel: MoviesViewModel by viewModels()
 
     private val moviesAdapter : AllMoviesAdapter by lazy {
-        AllMoviesAdapter()
+        AllMoviesAdapter(this)
     }
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding= MovieslistfragmentBinding.inflate(layoutInflater,container,false)
         return binding.root
     }
@@ -48,28 +49,33 @@ class MoviesListFragment : Fragment() {
 
     private fun getProductCallBack() {
         productViewModel.allMoviesResponse.observe(
-            viewLifecycleOwner, Observer { response ->
-                when (response) {
-                    is Resource.Loading -> {
-                     binding.progressBar.visibility=View.VISIBLE
-                    }
+            viewLifecycleOwner
+        ) { response ->
+            when (response) {
+                is Resource.Loading -> {
+                    binding.progressBar.visibility = View.VISIBLE
+                }
 
-                    is Resource.sucess -> {
-                        binding.progressBar.visibility=View.GONE
-                        response.let {
-                            moviesAdapter.submitList(it.data?.results)
-                            moviesAdapter.notifyDataSetChanged()
-                        }
-                    }
-
-                    is Resource.Error -> {
-                        binding.progressBar.visibility=View.GONE
-                        Snackbar.make(requireView(), "${response.message}", Snackbar.LENGTH_SHORT)
-                            .show()
+                is Resource.sucess -> {
+                    binding.progressBar.visibility = View.GONE
+                    response.let {
+                        moviesAdapter.submitList(it.data?.results)
                     }
                 }
-            })
+
+                is Resource.Error -> {
+                    binding.progressBar.visibility = View.GONE
+                    Snackbar.make(requireView(), "${response.message}", Snackbar.LENGTH_SHORT)
+                        .show()
+                }
+            }
+        }
 
         productViewModel.getAllMovies()
+    }
+
+    override fun onItemClicked(result: Result) {
+        val action=MoviesListFragmentDirections.actionMoviesListFragmentToMovieDetailsFragment(result)
+        findNavController().navigate(action)
     }
 }
