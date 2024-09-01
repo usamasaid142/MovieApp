@@ -1,11 +1,13 @@
 package com.example.movieapp.model
 
+import java.io.Serializable
+
 data class GetMoviesResponse(
     val page: Int,
     val results: List<Result>,
     val total_pages: Int,
     val total_results: Int
-)
+):Serializable
 data class Result(
     val adult: Boolean,
     val backdrop_path: String,
@@ -21,4 +23,4 @@ data class Result(
     val video: Boolean,
     val vote_average: Double,
     val vote_count: Int
-)
+):Serializable

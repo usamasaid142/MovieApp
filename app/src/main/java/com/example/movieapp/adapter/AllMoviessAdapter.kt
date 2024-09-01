@@ -10,7 +10,7 @@ import com.example.movieapp.databinding.ItemLayoutMoviesBinding
 import com.example.movieapp.model.Result
 
 
-class AllMoviesAdapter () :
+class AllMoviesAdapter (val listener:IMoviesListener) :
     ListAdapter<Result, AllMoviesAdapter.ViewHolder>(DiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -27,7 +27,9 @@ class AllMoviesAdapter () :
 
         holder.binding.apply {
             data = result
-            ratingBar.rating= result.vote_average?.toFloat()?: 1.0f
+        }
+        holder.binding.layoutCard.setOnClickListener {
+            listener.onItemClicked(result)
         }
     }
     class ViewHolder(itemBinding: ItemLayoutMoviesBinding) :
@@ -41,6 +43,10 @@ class AllMoviesAdapter () :
         override fun areContentsTheSame(oldItem: Result, newItem: Result): Boolean {
             return true
         }
+    }
+
+    interface IMoviesListener{
+        fun onItemClicked(result:Result)
     }
 
 }
