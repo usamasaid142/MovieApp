@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.movieapp.adapter.AllMoviesAdapter
@@ -89,7 +90,7 @@ class MoviesListFragment : Fragment(), AllMoviesAdapter.IMoviesListener {
     }
 
     override fun addToFavorite(result: Result) {
-        id+=1
+        id++
         val movieEntity = MoviesEntity(
             id,
             result.id,
@@ -105,17 +106,26 @@ class MoviesListFragment : Fragment(), AllMoviesAdapter.IMoviesListener {
             result.vote_count
         )
         viewModels.insertMovies(movieEntity)
-
         Snackbar.make(requireView(),"data Sent Successfully",Snackbar.LENGTH_SHORT).show()
     }
 
     private fun getAllMoviesFromLocalDatabase() {
-        viewModels.allMovies.observe(viewLifecycleOwner) {
+        viewModels.allMovies.observe(viewLifecycleOwner, Observer {
+            if (!it.isNullOrEmpty()){
+                id= it[it.size-1].id!!
+            }
             it.forEach {
-                val  movieId=MovieId(it.movieId)
+                val movieId=MovieId(it.movieId)
+                id= it.id!!
                 moviesId.add(movieId)
             }
-        }
+
+        })
+    }
+
+    override fun onPause() {
+        super.onPause()
+        moviesId.clear()
     }
 }
 

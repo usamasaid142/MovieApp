@@ -41,9 +41,6 @@ class AllMoviesAdapter (val listener:IMoviesListener,val moviesList:List<MovieId
             if (result.id==it.id){
                 holder.binding.ivFav.visibility=View.VISIBLE
                 holder.binding.fab.visibility=View.GONE
-            }else{
-                holder.binding.ivFav.visibility=View.GONE
-                holder.binding.fab.visibility=View.VISIBLE
             }
         }
     }
