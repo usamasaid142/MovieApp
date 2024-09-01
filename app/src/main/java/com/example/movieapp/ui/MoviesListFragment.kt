@@ -9,33 +9,39 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.movieapp.adapter.AllMoviesAdapter
+import com.example.movieapp.data.local.MoviesEntity
 import com.example.movieapp.databinding.MovieslistfragmentBinding
+import com.example.movieapp.model.MovieId
 import com.example.movieapp.model.Result
 import com.example.movieapp.utils.Resource
 import com.example.movieapp.viewmodels.MoviesViewModel
+import com.example.movieapp.viewmodels.ViewModelDataBase
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class MoviesListFragment : Fragment(),AllMoviesAdapter.IMoviesListener {
+class MoviesListFragment : Fragment(), AllMoviesAdapter.IMoviesListener {
 
-  private lateinit var binding:MovieslistfragmentBinding
-    private val productViewModel: MoviesViewModel by viewModels()
-
-    private val moviesAdapter : AllMoviesAdapter by lazy {
-        AllMoviesAdapter(this)
+    private lateinit var binding: MovieslistfragmentBinding
+    private val moviesViewModel: MoviesViewModel by viewModels()
+    private val viewModels: ViewModelDataBase by viewModels()
+    private var moviesId = mutableListOf<MovieId>()
+    private val moviesAdapter: AllMoviesAdapter by lazy {
+        AllMoviesAdapter(this,moviesId)
     }
+    private var id = 0
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding= MovieslistfragmentBinding.inflate(layoutInflater,container,false)
+        binding = MovieslistfragmentBinding.inflate(layoutInflater, container, false)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-         productRecylerview()
+        productRecylerview()
+        getAllMoviesFromLocalDatabase()
         getProductCallBack()
     }
 
@@ -48,7 +54,7 @@ class MoviesListFragment : Fragment(),AllMoviesAdapter.IMoviesListener {
     }
 
     private fun getProductCallBack() {
-        productViewModel.allMoviesResponse.observe(
+        moviesViewModel.allMoviesResponse.observe(
             viewLifecycleOwner
         ) { response ->
             when (response) {
@@ -68,14 +74,48 @@ class MoviesListFragment : Fragment(),AllMoviesAdapter.IMoviesListener {
                     Snackbar.make(requireView(), "${response.message}", Snackbar.LENGTH_SHORT)
                         .show()
                 }
+
+                else -> {}
             }
         }
 
-        productViewModel.getAllMovies()
+        moviesViewModel.getAllMovies()
     }
 
     override fun onItemClicked(result: Result) {
-        val action=MoviesListFragmentDirections.actionMoviesListFragmentToMovieDetailsFragment(result)
+        val action =
+            MoviesListFragmentDirections.actionMoviesListFragmentToMovieDetailsFragment(result)
         findNavController().navigate(action)
     }
+
+    override fun addToFavorite(result: Result) {
+        id+=1
+        val movieEntity = MoviesEntity(
+            id,
+            result.id,
+            result.original_language,
+            result.title,
+            result.overview,
+            result.popularity,
+            result.poster_path,
+            result.release_date,
+            result.title,
+            result.video,
+            result.vote_average,
+            result.vote_count
+        )
+        viewModels.insertMovies(movieEntity)
+
+        Snackbar.make(requireView(),"data Sent Successfully",Snackbar.LENGTH_SHORT).show()
+    }
+
+    private fun getAllMoviesFromLocalDatabase() {
+        viewModels.allMovies.observe(viewLifecycleOwner) {
+            it.forEach {
+                val  movieId=MovieId(it.movieId)
+                moviesId.add(movieId)
+            }
+        }
+    }
 }
+

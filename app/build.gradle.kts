@@ -94,6 +94,11 @@ dependencies {
     // Glide
     implementation ("com.github.bumptech.glide:glide:4.15.0")
     kapt ("com.github.bumptech.glide:compiler:4.15.0")
+    //room
+    implementation ("androidx.room:room-runtime:2.6.1")
+    implementation ("androidx.room:room-ktx:2.6.1")
+    kapt ("androidx.room:room-compiler:2.6.1")
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.3")
 }
 kapt {
     correctErrorTypes = true
