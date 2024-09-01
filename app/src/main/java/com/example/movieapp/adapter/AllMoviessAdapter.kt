@@ -2,15 +2,17 @@ package com.example.movieapp.adapter
 
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.movieapp.databinding.ItemLayoutMoviesBinding
+import com.example.movieapp.model.MovieId
 import com.example.movieapp.model.Result
 
 
-class AllMoviesAdapter (val listener:IMoviesListener) :
+class AllMoviesAdapter (val listener:IMoviesListener,val moviesList:List<MovieId>) :
     ListAdapter<Result, AllMoviesAdapter.ViewHolder>(DiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -31,6 +33,19 @@ class AllMoviesAdapter (val listener:IMoviesListener) :
         holder.binding.layoutCard.setOnClickListener {
             listener.onItemClicked(result)
         }
+        holder.binding.fab.setOnClickListener {
+            listener.addToFavorite(result)
+        }
+
+        moviesList.forEach {
+            if (result.id==it.id){
+                holder.binding.ivFav.visibility=View.VISIBLE
+                holder.binding.fab.visibility=View.GONE
+            }else{
+                holder.binding.ivFav.visibility=View.GONE
+                holder.binding.fab.visibility=View.VISIBLE
+            }
+        }
     }
     class ViewHolder(itemBinding: ItemLayoutMoviesBinding) :
         RecyclerView.ViewHolder(itemBinding.root) {
@@ -47,6 +62,7 @@ class AllMoviesAdapter (val listener:IMoviesListener) :
 
     interface IMoviesListener{
         fun onItemClicked(result:Result)
+        fun addToFavorite(result: Result)
     }
 
 }

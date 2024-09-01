@@ -5,13 +5,12 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import com.example.movieapp.model.Result
 
 @Dao
 interface MoviesDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertMovies(result: Result)
-    @Query(" select * from movie_table ")
-    fun getMovies(): LiveData<List<Result>>
+    suspend fun insertMovies(result: MoviesEntity)
+    @Query(" select * from movie_table")
+    fun getMovies(): LiveData<List<MoviesEntity>>
 
 }

@@ -2,7 +2,6 @@ package com.example.movieapp.data.local
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import kotlinx.serialization.Serializable
 @Entity(tableName = "movie_table")
 data class MoviesEntity(
     @PrimaryKey(autoGenerate = true)
